@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: Make sure we can connect
+     ping:
+   # NGINX
+   - name: Enable amazon-linux-extras packages
+     shell: "amazon-linux-extras enable {{ item }}"
+     become: yes
+     with_items:
+        - nginx1.12
+     
+   - name: Install nginx
+     yum: name=nginx state=present
+   - name: Create nginx config
+     template: src=templates/nginx/default dest=/etc/nginx/nginx.conf
+     notify: restart nginx
+   - name: copy certificates
+     template:
+        src=templates/certs/{{ item }}
+        dest=/etc/ssl
+     with_items:
+       - cert.crt
+       - private.key
+     notify: restart nginx
+     
+  handlers:
+   - name: restart nginx
+     service: name=nginx state=restarted
+     

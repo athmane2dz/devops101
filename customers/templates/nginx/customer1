@@ -1,0 +1,29 @@
+server {
+    listen 443;
+        ssl on;
+    ssl_certificate /etc/ssl/cert.crt;        # path to your cacert.pem
+    ssl_certificate_key /etc/ssl/private.key;    # path to your privkey.pem
+    server_tokens off;
+    server_name customer1-api.devops101.wiki;
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log debug;
+
+    location / {
+#        resolver 8.8.8.8;
+         resolver 172.31.0.2;
+
+        if ($host ~ ^([^.]*)-api\.devops101\.wiki) {
+            set $customer $1;
+            proxy_pass https://${customer}.tradewindmarkets.com/live;
+        }
+
+        proxy_intercept_errors on;
+        proxy_redirect off;
+        proxy_set_header Host "3hif3c30e7.execute-api.us-east-1.amazonaws.com";
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header User-Agent "${customer}tradewindmarkets";
+        proxy_hide_header x-amz-id-2;
+        proxy_hide_header x-amz-request-id;
+    }
+}

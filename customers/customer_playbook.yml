@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+   - name: Make sure we can connect
+     ping:
+   - name: Create nginx config for customer1
+     template: 
+       src=templates/nginx/customer1 
+       dest=/etc/nginx/conf.d/customer1.conf 
+     notify: restart nginx
+     
+  handlers:
+   - name: restart nginx
+     service: name=nginx state=restarted
+     
