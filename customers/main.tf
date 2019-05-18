@@ -4,7 +4,7 @@ provider "aws" {
 
 terraform {
     backend "s3" {
-        bucket = "athmanebouazzounitfstate"
+        bucket = "YOU_S3_BUCKET"
         key = "NEW_CUSTOMER/terraform.tfstate"
         region = "us-east-1"
         encrypt = true
@@ -17,7 +17,7 @@ terraform {
 data "terraform_remote_state" "main" {  
         backend = "s3"  
         config {    
-        bucket = "athmanebouazzounitfstate"
+        bucket = "YOU_S3_BUCKET"
         key    = "global/terraform.tfstate"
         region = "us-east-1"
         } 
@@ -33,7 +33,7 @@ resource "aws_route53_record" "customer" {
 
 
 #resource "aws_s3_bucket" "terraform_state" {
-#         bucket = "athmanebouazzounitfstate"
+#         bucket = "YOU_S3_BUCKET"
 #         versioning {
 #              enabled = true  }
 #         lifecycle {
