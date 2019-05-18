@@ -56,7 +56,14 @@ website {
 resource "aws_s3_bucket_object" "object" {
   bucket = "${aws_s3_bucket.website_bucket.id}"
   key    = "index.html"
-  content = "This is ${var.customer_name} Website"
+  content = "<!DOCTYPE html>
+<html>
+<body>
+
+<h1 style="color:blue;">My AWSome website</h1>
+
+</body>
+</html>"
   content_type = "text/plain"
 }
 
